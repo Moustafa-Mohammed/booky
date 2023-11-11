@@ -4,43 +4,48 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 
-import { setDoc, doc } from "firebase/firestore";
+import { auth } from "../firebase.config";
 
-import { auth, db } from "../firebase.config";
-
-const AuthContext = createContext({});
+const AuthContext = createContext();
 
 export function AuthContextProvider({ children }) {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
-  const signUp = async (email, password) => {
-    await createUserWithEmailAndPassword(auth, email, password);
-    await setDoc(doc(db, "users", email), {
-      favorites: [],
-    });
+  const createUser = (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const logIn = async (email, password) => {
-    return await signInWithEmailAndPassword(auth, email, password);
+  const login = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const logOut = async () => {
-    return await signOut(auth);
+  const signInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider);
+  };
+
+  const logout = () => {
+    return signOut(auth);
   };
 
   useEffect(() => {
     const unsubscribeFromAuth = onAuthStateChanged(auth, (currUser) => {
       setUser(currUser);
     });
-    console.log(user);
 
-    return unsubscribeFromAuth;
-  });
+    return () => {
+      unsubscribeFromAuth();
+    };
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signUp, logIn, logOut }}>
+    <AuthContext.Provider
+      value={{ user, createUser, login, signInWithGoogle, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,38 +1,42 @@
-import axios from "axios";
-import { useParams } from "react-router-dom";
-
-import { BOOKS_API_URL } from "../apis";
-import { useQuery } from "@tanstack/react-query";
-import { AiFillHeart, AiFillStar, AiOutlineHeart } from "react-icons/ai";
 import { useState } from "react";
+import axios from "axios";
+import { Link, useParams } from "react-router-dom";
+
+import { BOOKS_API_URL, HOME } from "../apis";
+import { useQuery } from "@tanstack/react-query";
+import { AiFillHeart, AiFillStar } from "react-icons/ai";
+import userAuth from "../context/Authcontext";
+import BookSpinner from "../components/BookSpinner";
 
 export default function BookDetails() {
   const { id } = useParams();
+  const { user } = userAuth();
 
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleAddToFavorite = () => {
-    setIsFavorite(!isFavorite);
+    if (user !== null) setIsFavorite(!isFavorite);
   };
 
-  const { data: book, isLoading } = useQuery(["book"], async () => {
-    return await axios.get(`${BOOKS_API_URL}/${id}`).then((res) => res.data);
+  const { data: book, isLoading } = useQuery({
+    queryKey: ["book"],
+    queryFn: async () => {
+      return await axios.get(`${BOOKS_API_URL}/${id}`).then((res) => res.data);
+    },
   });
 
-  const ratingBar = (book?.rating / 5) * 100;
-
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <BookSpinner />;
   }
 
   return (
-    <div className="container mx-auto h-screen flex items-center">
-      <div className="grid grid-cols-3 bg-white items-center w-full shadow-lg rounded p-4 gap-8 relative">
+    <div className="container mx-auto  bg-gray-800 ">
+      <div className="grid grid-cols-3  items-center shadow-lg rounded p-4 gap-8 relative">
         <div className="absolute top-4 right-4" onClick={handleAddToFavorite}>
           {isFavorite ? (
             <AiFillHeart className="text-red-700 text-3xl" />
           ) : (
-            <AiOutlineHeart className="text-3xl" />
+            <AiFillHeart className="text-3xl text-white" />
           )}
         </div>
         <div className="col-span-1">
@@ -43,15 +47,23 @@ export default function BookDetails() {
           />
         </div>
         <div className="col-span-2">
-          <h3 className="text-xl mt-3 font-medium">{book.title}</h3>
-          <p>By: {book.authors}</p>
-          <p className="flex items-center gap-1">
+          <h3 className="text-white text-lg mt-3 font-medium w-2/3">
+            {book.title}
+          </h3>
+          <p className="text-gray-200">By: {book.authors}</p>
+          <p className="flex items-center gap-1 text-yellow-600">
             {book.rating} <AiFillStar className="text-yellow-600" />
           </p>
           <div className="mt-4">
-            <h4 className="font-medium text-lg">About the book</h4>
-            <p>{book.description}</p>
+            <h4 className="font-medium text-lg text-white">About the book</h4>
+            <p className="text-gray-400">{book.description}</p>
           </div>
+          <Link
+            to={HOME}
+            className="mt-6 inline-block text-yellow-600 underline"
+          >
+            Back to all books
+          </Link>
         </div>
       </div>
     </div>

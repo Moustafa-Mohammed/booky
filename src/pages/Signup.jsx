@@ -1,23 +1,24 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
-import * as yup from "yup";
-import { AUTH_LOGIN, HOME } from "../apis";
-import userAuth from "../context/Authcontext";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { BsEye, BsEyeSlash } from 'react-icons/bs';
+import { Link, useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
+import { AUTH_LOGIN, HOME } from '../apis';
+import userAuth from '../context/Authcontext';
+import Button from '../components/Button';
 
 const schema = yup
   .object({
     email: yup.string().email().required(),
     password: yup.string().min(8).required(),
-    repeat_password: yup.string().oneOf([yup.ref("password"), null]),
+    repeat_password: yup.string().oneOf([yup.ref('password'), null]),
   })
   .required();
 
 const Signup = () => {
-  const { user, signUp } = userAuth();
+  const { createUser } = userAuth();
   const navigate = useNavigate();
   const {
     register,
@@ -25,31 +26,29 @@ const Signup = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const [success, setSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
   const [passwordVisible, setPasswordVisibility] = useState(false);
 
   const passwordInputIcon = passwordVisible ? <BsEyeSlash /> : <BsEye />;
-  const inputType = passwordVisible ? "text" : "password";
+  const inputType = passwordVisible ? 'text' : 'password';
 
   const handleSignUp = async ({ email, password }) => {
-    console.log("handle signup");
-    setIsSubmitting(true);
+    setIsRegistering(true);
     try {
-      await signUp(email, password);
-      setSuccess(true);
+      await createUser(email, password);
       setTimeout(() => {
-        navigate(HOME, { replace: true });
-      }, 3000);
+        navigate(HOME);
+      }, 1000);
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error);
+      console.log(errorMessage);
     }
-    setIsSubmitting(false);
+    setIsRegistering(false);
   };
 
   return (
-    <div className="  bg-gray-200 h-screen flex items-center">
+    <div className="h-screen flex items-center">
       <div className="container mx-auto w-[500px] shadow-lg p-8 bg-white">
         <h1 className="text-3xl font-semibold text-center uppercase text-slate-700">
           Sign up
@@ -59,7 +58,7 @@ const Signup = () => {
         </p>
         {errorMessage && (
           <div
-            className="w-full bg-red-100 text-red-700 border border-red-400 rounded py-3 px-4 mt-4"
+            className="w-full bg-red-100 text-red-700 border border-red-400  py-3 px-4 mt-4"
             role="alert"
           >
             <span className="font-bold">Faild! </span>
@@ -77,11 +76,11 @@ const Signup = () => {
             <div className="mt-3">
               <input
                 name="email"
-                {...register("email")}
+                {...register('email')}
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                className=" w-full rounded-[10px] border border-gray focus:outline-none focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 focus:bg-gray-100 placeholder:text-darkGray px-3 py-2"
+                className="w-full rounded-[10px] border border-gray-200 focus:outline-none focus:border-primary-700 focus:ring-1 focus:ring-primary-700 focus:bg-gray-100 placeholder:text-gray-500 px-3 py-2"
               />
             </div>
             <p className="text-red-700">{errors.email?.message}</p>
@@ -93,10 +92,10 @@ const Signup = () => {
             >
               Password
             </label>
-            <div className="mt-3 flex justify-between w-full rounded-[10px] border border-gray  focus-within:border-indigo-300 focus-within:ring-1 focus-within:ring-indigo-300 focus-within:bg-gray-100 px-3 py-2 items-center">
+            <div className="mt-3 flex justify-between w-full rounded-[10px] border border-gray  focus-within:border-primary-700 focus-within:ring-1 focus-within:ring-primary-700 focus-within:bg-gray-100 px-3 py-2 items-center">
               <input
                 name="password"
-                {...register("password")}
+                {...register('password')}
                 id="password"
                 type={inputType}
                 placeholder="At least 8 characters"
@@ -118,10 +117,10 @@ const Signup = () => {
             >
               Confirm Password
             </label>
-            <div className="mt-3 flex justify-between w-full rounded-[10px] border border-gray  focus-within:border-indigo-300 focus-within:ring-1 focus-within:ring-indigo-300 focus-within:bg-gray-100 px-3 py-2 items-center">
+            <div className="mt-3 flex justify-between w-full rounded-[10px] border border-gray  focus-within:border-primary-700 focus-within:ring-1 focus-within:ring-primary-700 focus-within:bg-gray-100 px-3 py-2 items-center">
               <input
                 name="repeat_password"
-                {...register("repeat_password")}
+                {...register('repeat_password')}
                 id="confirm password"
                 type={inputType}
                 placeholder="At least 8 characters"
@@ -138,17 +137,15 @@ const Signup = () => {
               <p className="text-red-700">Passwords do not match</p>
             )}
           </div>
-          <button
-            disabled={isSubmitting}
-            type="submit"
-            className="rounded-[10px] bg-indigo-500 text-white text-xl w-full py-3 mt-6"
-          >
-            {isSubmitting ? "Submitting..." : "Sign up"}
-          </button>
+          <Button secondary rounded className="w-full mt-3">
+            {isRegistering ? 'Signing up...' : 'Sign up'}
+          </Button>
           <p className="text-lg mt-6">
-            Already have an account ?
-            <span className="text-indigo-500 hover:underline">
-              <Link to={AUTH_LOGIN}> Sign in</Link>
+            Already have an account?
+            <span className="text-primary-500 hover:underline">
+              <Link to={AUTH_LOGIN} className="text-indigo-600  ml-1">
+                Sign in
+              </Link>
             </span>
           </p>
         </form>
