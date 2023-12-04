@@ -3,7 +3,9 @@ import { AUTH_LOGIN } from "../apis";
 import userAuth from "../context/Authcontext";
 
 function ProtectedRoute() {
-  const { user } = userAuth();
+  const { user, isLoading } = userAuth();
+
+  if (isLoading) return <div>Loading</div>;
 
   if (!user) {
     return <Navigate to={AUTH_LOGIN} />;

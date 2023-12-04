@@ -14,6 +14,7 @@ const AuthContext = createContext();
 
 export function AuthContextProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const createUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -35,6 +36,7 @@ export function AuthContextProvider({ children }) {
   useEffect(() => {
     const unsubscribeFromAuth = onAuthStateChanged(auth, (currUser) => {
       setUser(currUser);
+      setIsLoading(false);
     });
 
     return () => {
@@ -44,7 +46,14 @@ export function AuthContextProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, createUser, login, signInWithGoogle, logout }}
+      value={{
+        user,
+        isLoading,
+        createUser,
+        login,
+        signInWithGoogle,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>
