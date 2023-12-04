@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { AiFillHeart, AiFillStar } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { AiFillHeart, AiFillStar } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 function Book({ book }) {
   const navigate = useNavigate();
@@ -12,13 +12,13 @@ function Book({ book }) {
 
   return (
     <div className="shadow-lg pb-4 group bg-gray-800 border border-gray-500 rounded-md">
-      <div className="h-[450px]  overflow-hidden">
+      <div className="h-[300px]  overflow-hidden">
         <div
           style={{
             backgroundImage: `url(${book.image_url})`,
           }}
           className="rounded-md w-full h-full relative bg-cover bg-center group-hover:scale-110  duration-[3000ms]"
-          onClick={() => navigate('/' + book.id)}
+          onClick={() => navigate("/" + book.id)}
         >
           <div className="absolute top-0 mt-20 right-0 bottom-0 left-0 bg-gradient-to-b from-transparent to-gray-900"></div>
         </div>
@@ -36,7 +36,7 @@ function Book({ book }) {
         <AiFillHeart
           onClick={handleAddToFavorite}
           className={`${
-            isFavorite ? 'text-red-700' : 'text-white'
+            isFavorite ? "text-red-700" : "text-white"
           } text-3xl absolute right-6 top-0`}
         />
       </div>

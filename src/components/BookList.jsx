@@ -20,19 +20,26 @@ export default function BookDetails() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-        <BookSkeleton />
-        <BookSkeleton />
-        <BookSkeleton />
-        <BookSkeleton />
-        <BookSkeleton />
-        <BookSkeleton />
-      </div>
+      <>
+        <div className="container mx-auto px-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+          <BookSkeleton />
+          <BookSkeleton />
+          <BookSkeleton />
+          <BookSkeleton />
+          <BookSkeleton />
+          <BookSkeleton />
+          <BookSkeleton />
+          <BookSkeleton />
+        </div>
+        <p className="mt-4 text-2xl text-gray-400 rounded-full mb-4 animate-pulse text-center">
+          Loading...
+        </p>
+      </>
     );
   }
 
   return (
-    <div className="container mx-auto px-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+    <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
       {displayedBooks}
     </div>
   );
