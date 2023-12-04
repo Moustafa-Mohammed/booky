@@ -6,7 +6,7 @@ import { BOOKS_API_URL, HOME } from "../apis";
 import { useQuery } from "@tanstack/react-query";
 import { AiFillHeart, AiFillStar } from "react-icons/ai";
 import userAuth from "../context/Authcontext";
-import BookSpinner from "../components/BookSpinner";
+import BookSkeleton from "../components/BookSkeleton";
 
 export default function BookDetails() {
   const { id } = useParams();
@@ -26,7 +26,11 @@ export default function BookDetails() {
   });
 
   if (isLoading) {
-    return <BookSpinner />;
+    return (
+      <div className="max-w-3xl mx-auto">
+        <BookSkeleton />
+      </div>
+    );
   }
 
   return (
