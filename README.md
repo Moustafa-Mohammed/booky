@@ -1,6 +1,6 @@
-# Booky - Your Personal Book Library
+# Booky Website
 
-Booky is a personal project that allows you to create and manage your virtual book library. With features like user authentication, form validation, and seamless data fetching, Booky provides a user-friendly interface to interact with a mock REST API for books.
+Booky is a personal project that allows you to browse books and add them to your favourties. It provides features like user authentication, form validation, and seamless data fetching, which offers a user-friendly interface to interact with a mock REST API for books.
 
 ## Technologies Used
 
