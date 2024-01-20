@@ -75,7 +75,7 @@ const Login = () => {
           </p>
           {errorMessage && (
             <div
-              className="w-full bg-red-100 text-red-700 border border-red-400 py-3 px-4 my-4"
+              className=" w-full bg-red-100 text-red-700 border border-red-400 py-3 px-4 my-4"
               role="alert"
             >
               <span className="font-bold">Faild! </span>
